@@ -1,0 +1,3 @@
+WEBHOOK_PASS="ab12345"
+API_KEY="test"
+API_SECRET="testkey"
