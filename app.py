@@ -14,6 +14,12 @@ coins = {
     "ADAUSDT":"None",
     "DOGEUSDT":"None",
 }
+lavs = {
+    "ETHUSDT":20,
+    "BTCUSDT":20,
+    "ADAUSDT":20,
+    "DOGEUSDT":20,
+}
 def order(coin,amount,leverage,position):
     try:
         if coins[coin] != position :
@@ -31,11 +37,10 @@ def order(coin,amount,leverage,position):
 @app.route('/')
 def main_view():
     return 'Hello from loseb k.!'
-
 @app.route('/tradehook',methods=['POST'])
 def webhook():
     resData = json.loads(request.data)
-    order_response = order()
+    order_response = order(resData['coin'],resData['quantity'],resData['leverage'],resData['positionSide'])
     print(order_response)
     print(resData)
     if resData['passkey'] != config.WEBHOOK_PASS:
