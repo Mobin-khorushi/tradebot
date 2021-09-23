@@ -21,24 +21,22 @@ lavs = {
     "DOGEUSDT":20,
 }
 def order(coin,amount,leverage,position):
-
-        if coins[coin] != position :
-            try:
-                result = request_client.change_margin_type(coin, marginType=FuturesMarginType.ISOLATED)
-                print("Margin Type: " + result)
-            except Exception as e:
-                print("an exception occured - {}".format(e))
-            try:
-                result = request_client.cancel_all_orders(coin)
-                print("Order cancel: " + result)
-            except Exception as e:
-                print("an exception occured - {}".format(e))
-            try:
-                result = request_client.change_initial_leverage(coin, leverage)
-                print("Leverage: " + result)
-            except Exception as e:
-                print("an exception occured - {}".format(e))
-        
+    if coins[coin] != position :
+        try:
+            result = request_client.change_margin_type(coin, marginType=FuturesMarginType.ISOLATED)
+            print("Margin Type: " + result)
+        except Exception as e:
+            print("an exception occured - {}".format(e))
+        try:
+            result = request_client.cancel_all_orders(coin)
+            print("Order cancel: " + result)
+        except Exception as e:
+            print("an exception occured - {}".format(e))
+        try:
+            result = request_client.change_initial_leverage(coin, leverage)
+            print("Leverage: " + result)
+        except Exception as e:
+            print("an exception occured - {}".format(e))
     
     return True
 @app.route('/')
