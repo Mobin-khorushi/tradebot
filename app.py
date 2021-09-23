@@ -41,7 +41,8 @@ def main_view():
 
 @app.route('/tradehook',methods=['POST'])
 def webhook():
-    resData = json.loads(request.data)
+    print(request)
+    resData = json.loads(request.json)
     #side = resData['strategy']['order_action'].upper()
     #order_response = order()
     #print(order_response)
