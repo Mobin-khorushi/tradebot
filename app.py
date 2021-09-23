@@ -9,7 +9,7 @@ from binance_f.model.constant import *
 
 request_client = RequestClient(api_key=config.API_KEY, secret_key=config.API_SECRET)
 
-def order(side,quantity,symbol,order_type=ORDER_TYPE_MARKET):
+def order():
     try:
         result = request_client.get_account_information()
         print(result)
@@ -43,7 +43,7 @@ def main_view():
 def webhook():
     resData = json.loads(request.data)
     #side = resData['strategy']['order_action'].upper()
-    order_response = order("BUY",100,"DOGEUSD")
+    order_response = order()
     print(order_response)
     print(resData)
     if resData['passphrase'] != config.WEBHOOK_PASS:
