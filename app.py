@@ -21,18 +21,14 @@ lavs = {
     "DOGEUSDT":20,
 }
 def order(coin,amount,leverage,position):
-    try:
-        if coins[coin] != position :
-            result = request_client.change_margin_type(symbol="BTCUSDT", marginType=FuturesMarginType.ISOLATED)
-            print("Margin Type: " + result)
-            result = request_client.cancel_all_orders(coin)
-            print("Order cancel: " + result)
-            result = request_client.change_initial_leverage(symbol="BTCUSDT", leverage=10)
-            print("Leverage: " + result)
-        
-    except Exception as e:
-        print("an exception occured - {}".format(e))
-        return False
+
+    if coins[coin] != position :
+        result = request_client.change_margin_type(coin, marginType=FuturesMarginType.ISOLATED)
+        print("Margin Type: " + result)
+        result = request_client.cancel_all_orders(coin)
+        print("Order cancel: " + result)
+        result = request_client.change_initial_leverage(coin, leverage)
+        print("Leverage: " + result)
     return True
 @app.route('/')
 def main_view():
