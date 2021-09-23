@@ -2,15 +2,35 @@ import json, config
 import re
 from flask import Flask,request,jsonify
 app = Flask(__name__)
-from binance.client import Client
-from binance.enums import *
-client = Client(config.API_KEY,config.API_SECRET,tld='us')
+from binance_f import RequestClient
+from binance_f.constant.test import *
+from binance_f.base.printobject import *
+from binance_f.model.constant import *
+
+request_client = RequestClient(api_key=config.API_KEY, secret_key=config.API_SECRET)
 
 def order(side,quantity,symbol,order_type=ORDER_TYPE_MARKET):
     try:
-        print(f"sending order {order_type} - {side} {quantity} {symbol}")
-        order = client.create_order(symbol=symbol,side=side,type=order_type,quantity=quantity)
-        print(order)
+        result = request_client.get_account_information()
+        print(result)
+        print("canDeposit: ", result.canDeposit)
+        print("canWithdraw: ", result.canWithdraw)
+        print("feeTier: ", result.feeTier)
+        print("maxWithdrawAmount: ", result.maxWithdrawAmount)
+        print("totalInitialMargin: ", result.totalInitialMargin)
+        print("totalMaintMargin: ", result.totalMaintMargin)
+        print("totalMarginBalance: ", result.totalMarginBalance)
+        print("totalOpenOrderInitialMargin: ", result.totalOpenOrderInitialMargin)
+        print("totalPositionInitialMargin: ", result.totalPositionInitialMargin)
+        print("totalUnrealizedProfit: ", result.totalUnrealizedProfit)
+        print("totalWalletBalance: ", result.totalWalletBalance)
+        print("updateTime: ", result.updateTime)
+        print("=== Assets ===")
+        PrintMix.print_data(result.assets)
+        print("==============")
+        print("=== Positions ===")
+        PrintMix.print_data(result.positions)
+        print("==============")
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
@@ -21,12 +41,11 @@ def main_view():
 
 @app.route('/tradehook',methods=['POST'])
 def webhook():
-    
     resData = json.loads(request.data)
-    side = resData['strategy']['order_action'].upper()
+    #side = resData['strategy']['order_action'].upper()
     order_response = order("BUY",100,"DOGEUSD")
     print(order_response)
-    print(side)
+    print(resData)
     if resData['passphrase'] != config.WEBHOOK_PASS:
         return {
             "code":"error",
@@ -35,4 +54,49 @@ def webhook():
     return {
         "code":"success",
         "message" : resData
-    }
+    } 
+    
+"""
+ 
+import config
+from binance_f import RequestClient
+from binance_f.constant.test import *
+from binance_f.base.printobject import *
+from binance_f.model.constant import *
+
+request_client = RequestClient(api_key=config.API_KEY, secret_key=config.API_SECRET)
+result = request_client.get_account_information()
+print(result)
+print("canDeposit: ", result.canDeposit)
+print("canWithdraw: ", result.canWithdraw)
+print("feeTier: ", result.feeTier)
+print("maxWithdrawAmount: ", result.maxWithdrawAmount)
+print("totalInitialMargin: ", result.totalInitialMargin)
+print("totalMaintMargin: ", result.totalMaintMargin)
+print("totalMarginBalance: ", result.totalMarginBalance)
+print("totalOpenOrderInitialMargin: ", result.totalOpenOrderInitialMargin)
+print("totalPositionInitialMargin: ", result.totalPositionInitialMargin)
+print("totalUnrealizedProfit: ", result.totalUnrealizedProfit)
+print("totalWalletBalance: ", result.totalWalletBalance)
+print("updateTime: ", result.updateTime)
+print("=== Assets ===")
+PrintMix.print_data(result.assets)
+print("==============")
+print("=== Positions ===")
+PrintMix.print_data(result.positions)
+print("==============") """
+
+""" import json, config
+from binance.client import Client
+from binance.enums import *
+client = Client(config.API_KEY,config.API_SECRET,testnet=True)
+
+account_balance = client.get_asset_balance(asset='USDT')
+print(account_balance)
+account_trades = client.get_my_trades(symbol='ETHUSDT')
+print(account_trades)
+account_orders = client.get_all_orders(symbol='ETHUSDT')
+print(account_orders)
+
+order = client.futures_create_order(symbol='ETHUSDT', side='BUY', type='MARKET', quantity=10)
+print(order)  """
