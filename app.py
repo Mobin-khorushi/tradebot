@@ -37,9 +37,9 @@ def order(coin,amount,leve,position):
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
-            if coins[coin] == "LONG":
+            if coins[coin] == "LONG" or position == "LONG":
                 result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
-            if coins[coin] == "SHORT":
+            if coins[coin] == "SHORT" or position == "SHORT":
                 result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
             coins[coin] = position
             print(result)
