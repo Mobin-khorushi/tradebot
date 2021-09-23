@@ -15,10 +15,10 @@ coins = {
     "DOGEUSDT":"None",
 }
 lavs = {
-    "ETHUSDT":20,
-    "BTCUSDT":20,
-    "ADAUSDT":20,
-    "DOGEUSDT":20,
+    "ETHUSDT":"20",
+    "BTCUSDT":"20",
+    "ADAUSDT":"20",
+    "DOGEUSDT":"20",
 }
 def order(coin,amount,leve,position):
     if coins[coin] != position :
@@ -33,8 +33,7 @@ def order(coin,amount,leve,position):
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
-            print("Leverage Bef: " + leve)
-            result = request_client.change_initial_leverage(symbol=coin, leverage=leve)
+            result = request_client.change_initial_leverage(coin, lavs[coin])
             print("Leverage: " + result)
         except Exception as e:
             print("an exception occured - {}".format(e))
