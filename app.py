@@ -37,7 +37,6 @@ def order(coin,amount,leverage,position):
             print("Leverage: " + result)
         except Exception as e:
             print("an exception occured - {}".format(e))
-    
     return True
 @app.route('/')
 def main_view():
