@@ -44,11 +44,14 @@ def webhook():
     print(request)
     resData = request.json
     resData2 = request.form
+    resData3 = request.data
     #side = resData['strategy']['order_action'].upper()
     #order_response = order()
     #print(order_response)
     print(resData)
     print(resData2)
+    print(resData3)
+    return
     if resData['passphrase'] != config.WEBHOOK_PASS:
         return {
             "code":"error",
