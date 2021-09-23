@@ -12,7 +12,6 @@ request_client = RequestClient(api_key=config.API_KEY, secret_key=config.API_SEC
 def order():
     try:
         result = request_client.get_account_information()
-        print(result)
         print("canDeposit: ", result.canDeposit)
         print("canWithdraw: ", result.canWithdraw)
         print("feeTier: ", result.feeTier)
@@ -41,7 +40,6 @@ def main_view():
 
 @app.route('/tradehook',methods=['POST'])
 def webhook():
-    print(request)
     resData = json.loads(request.data)
     order_response = order()
     print(order_response)
