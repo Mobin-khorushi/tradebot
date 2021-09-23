@@ -36,6 +36,11 @@ def order(coin,amount,leve,position):
             result = request_client.change_initial_leverage(coin, lavs[coin])
         except Exception as e:
             print("an exception occured - {}".format(e))
+        try:
+            result = request_client.post_order(symbol=coin, positionSide=position)
+            print(result)
+        except Exception as e:
+            print("an exception occured - {}".format(e))
     return True
 @app.route('/')
 def main_view():
