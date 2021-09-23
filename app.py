@@ -11,7 +11,8 @@ request_client = RequestClient(api_key=config.API_KEY, secret_key=config.API_SEC
 
 def order():
     try:
-        print('done')
+        result = request_client.get_balance()
+        PrintMix.print_data(result)
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
