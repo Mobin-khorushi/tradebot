@@ -47,14 +47,14 @@ def webhook():
     #order_response = order()
     #print(order_response)
     print(resData)
-    if resData['passphrase'] != config.WEBHOOK_PASS:
+    if resData['passkey'] != config.WEBHOOK_PASS:
         return {
             "code":"error",
             "message":"Invalid"
         }
     return {
         "code":"success",
-        "message" : resData
+        "message" : "We are good here"
     } 
     
 """
