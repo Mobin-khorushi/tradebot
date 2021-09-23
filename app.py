@@ -20,7 +20,7 @@ lavs = {
     "ADAUSDT":20,
     "DOGEUSDT":20,
 }
-def order(coin,amount,leverage,position):
+def order(coin,amount,leve,position):
     if coins[coin] != position :
         try:
             result = request_client.change_margin_type(coin, marginType=FuturesMarginType.ISOLATED)
@@ -33,7 +33,8 @@ def order(coin,amount,leverage,position):
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
-            result = request_client.change_initial_leverage(coin, leverage)
+            print("Leverage Bef: " + leve)
+            result = request_client.change_initial_leverage(symbol=coin, leverage=leve)
             print("Leverage: " + result)
         except Exception as e:
             print("an exception occured - {}".format(e))
