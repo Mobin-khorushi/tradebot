@@ -43,8 +43,8 @@ def main_view():
 def webhook():
     resData = json.loads(request.data)
     #side = resData['strategy']['order_action'].upper()
-    order_response = order()
-    print(order_response)
+    #order_response = order()
+    #print(order_response)
     print(resData)
     if resData['passphrase'] != config.WEBHOOK_PASS:
         return {
