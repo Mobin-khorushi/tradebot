@@ -26,13 +26,10 @@ lastOrder = {
     "ADAUSDT":"0",
     "DOGEUSDT":"0",
 }
-def close_order(coin):
+def close_order(coin,orderid):
     try:
-        if lastOrder[coin] != "0":
-            print(lastOrder[coin])
-            result = request_client.cancel_order(coin, lastOrder[coin])
-            lastOrder[coin] = "0"
-            print(result)
+        result = request_client.cancel_order(coin, orderid)
+        print(result)
         return True
     except Exception as e:
         print("an exception occured - {}".format(e))
@@ -44,8 +41,7 @@ def order(coin,amount,leve,position):
         print(result)
         try:
             orderList = request_client.get_open_orders(coin)
-            print(orderList)
-            #close_order(coin)
+            close_order(coin,orderList["orderId"])
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
