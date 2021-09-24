@@ -21,15 +21,33 @@ lavs = {
     "DOGEUSDT":"20",
 }
 lastOrder = {
-    "ETHUSDT":"0",
-    "BTCUSDT":"0",
-    "ADAUSDT":"0",
-    "DOGEUSDT":"0",
+    "ETHUSDT":{
+        "amount":"0",
+        "side":"0"
+    },
+    "BTCUSDT":{
+        "amount":"0",
+        "side":"0"
+    },
+    "ADAUSDT":{
+        "amount":"0",
+        "side":"0"
+    },
+    "DOGEUSDT":{
+        "amount":"0",
+        "side":"0"
+    }
 }
-def close_order(coin,orderid):
+def close_order(coin):
     try:
-        result = request_client.cancel_order(coin, orderid)
-        print(f"Cansel Results: {result}")
+        if lastOrder[coin]['side'] == "BUY":
+            request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=lastOrder[coin]['amount'],reduceOnly=True)
+            lastOrder[coin]['side'] = "0"
+            lastOrder[coin]['amount'] = "0"
+        elif lastOrder[coin]['side'] == "SELL":
+            request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=lastOrder[coin]['amount'],reduceOnly=True)
+            lastOrder[coin]['side'] = "0"
+            lastOrder[coin]['amount'] = "0"
         return True
     except Exception as e:
         print("an exception occured - {}".format(e))
@@ -39,7 +57,7 @@ def order(coin,amount,leve,position):
     if coins[coin] != position :
         try:
             print(f"last Order id: {lastOrder[coin]}")
-            #close_order(coin,lastOrder[coin])
+            close_order(coin,lastOrder[coin])
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
@@ -57,12 +75,14 @@ def order(coin,amount,leve,position):
             if  position.lower() == "long" :
                 result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
                 coins[coin] = position
-                lastOrder[coin] = getattr(result,'orderId')
+                lastOrder[coin]['side'] = "BUY"
+                lastOrder[coin]['amount'] = amount
                 
             if  position.lower() == "short":
                 result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
                 coins[coin] = position
-                lastOrder[coin] = getattr(result,'orderId')
+                lastOrder[coin]['side'] = "SELL"
+                lastOrder[coin]['amount'] = amount
         except Exception as e:
             print("an exception occured - {}".format(e))
     return True
