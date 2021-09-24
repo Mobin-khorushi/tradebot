@@ -26,23 +26,26 @@ def order(coin,amount,leve,position):
         print(result)
         try:
             result = request_client.change_margin_type(coin, marginType=FuturesMarginType.ISOLATED)
+            print(result)
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
             result = request_client.cancel_all_orders(coin)
+            print(result)
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
             lavs[coin] = leve
             result = request_client.change_initial_leverage(coin, lavs[coin])
+            print(result)
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
-            if coins[coin] == "LONG" or position == "LONG":
+            if coins[coin].lower() == "long" or position.lower() == "long":
                 result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
                 print(result)
                 coins[coin] = position
-            if coins[coin] == "SHORT" or position == "SHORT":
+            if coins[coin].lower() == "short" or position.lower() == "short":
                 result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
                 print(result)
                 coins[coin] = position
