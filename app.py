@@ -29,7 +29,6 @@ lastOrder = {
 def close_order(coin,orderid):
     try:
         result = request_client.cancel_order(coin, orderid)
-        print(result)
         return True
     except Exception as e:
         print("an exception occured - {}".format(e))
@@ -37,12 +36,9 @@ def close_order(coin,orderid):
     return True
 def order(coin,amount,leve,position):
     if coins[coin] != position :
-        result = request_client.get_balance()
-        print(result)
         try:
-            orderList = request_client.get_open_orders(coin)
-            print(orderList)
-            close_order(coin,orderList["orderId"])
+            print(f"last Order id: {lastOrder[coin]}")
+            #close_order(coin,lastOrder[coin])
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
@@ -59,13 +55,11 @@ def order(coin,amount,leve,position):
         try:
             if  position.lower() == "long" :
                 result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
-                print(result)
                 coins[coin] = position
                 lastOrder[coin] = getattr(result,'orderId')
                 
             if  position.lower() == "short":
                 result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
-                print(result)
                 coins[coin] = position
                 lastOrder[coin] = getattr(result,'orderId')
         except Exception as e:
@@ -77,16 +71,12 @@ def main_view():
 @app.route('/tradehook',methods=['POST'])
 def webhook():
     resData = json.loads(request.data)
-    print(resData)
-    
-    
     if resData['passkey'] != config.WEBHOOK_PASS:
         return {
             "code":"error",
             "message":"Invalid"
         }
     order_response = order(resData['coin'],resData['quantity'],resData['leverage'],resData['positionSide'])
-    print(order_response)
     return {
         "code":"success",
         "message" : "We are good here"
