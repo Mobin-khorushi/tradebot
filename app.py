@@ -41,7 +41,7 @@ def order(coin,amount,leve,position):
         print(result)
         try:
             orderList = request_client.get_open_orders(coin)
-            print(orderList["orderId"])
+            print(orderList)
             close_order(coin,orderList["orderId"])
         except Exception as e:
             print("an exception occured - {}".format(e))
