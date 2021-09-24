@@ -84,7 +84,7 @@ def webhook():
     if resData['passkey'] != config.WEBHOOK_PASS:
         return {
             "code":"error",
-            "message":"Invalid"
+            "message":"Tricky?"
         }
     order_response = order(resData['coin'],resData['quantity'],resData['leverage'],resData['positionSide'])
     return {
