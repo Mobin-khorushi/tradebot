@@ -56,8 +56,7 @@ def close_order(coin):
 def order(coin,amount,leve,position):
     if coins[coin] != position :
         try:
-            print(f"last Order id: {lastOrder[coin]}")
-            close_order(coin,lastOrder[coin])
+            close_order(coin)
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
