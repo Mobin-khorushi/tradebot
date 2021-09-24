@@ -29,8 +29,9 @@ lastOrder = {
 def close_order(coin):
     try:
         if lastOrder[coin] != "0":
-            result = request_client.cancel_order(symbol: coin, orderId: lastOrder[coin])
-            print(result)
+            #result = request_client.cancel_order(symbol: coin, orderId: lastOrder[coin])
+           # print(result)
+           return True
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
@@ -56,13 +57,13 @@ def order(coin,amount,leve,position):
             print("an exception occured - {}".format(e))
         try:
             if  position.lower() == "long":
-                result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
+                result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount,closePosition=True)
                 print(result)
                 coins[coin] = position
                 resData = json.loads(result)
                 lastOrder[coin] = resData['orderId']
             if  position.lower() == "short":
-                result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
+                result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount,closePosition=True)
                 print(result)
                 coins[coin] = position
                 resData = json.loads(result)
