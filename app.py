@@ -29,6 +29,7 @@ lastOrder = {
 def close_order(coin,orderid):
     try:
         result = request_client.cancel_order(coin, orderid)
+        print(f"Cansel Results: {result}")
         return True
     except Exception as e:
         print("an exception occured - {}".format(e))
@@ -38,7 +39,7 @@ def order(coin,amount,leve,position):
     if coins[coin] != position :
         try:
             print(f"last Order id: {lastOrder[coin]}")
-            #close_order(coin,lastOrder[coin])
+            close_order(coin,lastOrder[coin])
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
