@@ -66,7 +66,7 @@ def order(coin,amount,leve,position):
                 result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
                 print(result)
                 coins[coin] = position
-                lastOrder[coin] = getattr(result,'orderId'))
+                lastOrder[coin] = getattr(result,'orderId')
         except Exception as e:
             print("an exception occured - {}".format(e))
     return True
