@@ -20,10 +20,17 @@ lavs = {
     "ADAUSDT":"20",
     "DOGEUSDT":"20",
 }
+lastOrder = {
+    "ETHUSDT":"0",
+    "BTCUSDT":"0",
+    "ADAUSDT":"0",
+    "DOGEUSDT":"0",
+}
 def close_order(coin):
     try:
-        result = request_client.cancel_all_orders(coin)
-        print(result)
+        if lastOrder[coin] != "0":
+            result = request_client.cancel_order(symbol: coin, orderId: lastOrder[coin])
+            print(result)
     except Exception as e:
         print("an exception occured - {}".format(e))
         return False
@@ -33,8 +40,7 @@ def order(coin,amount,leve,position):
         result = request_client.get_balance()
         print(result)
         try:
-            result = request_client.cancel_all_orders(coin)
-            print(result)
+            close_order(coin)
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
@@ -53,10 +59,14 @@ def order(coin,amount,leve,position):
                 result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
                 print(result)
                 coins[coin] = position
+                resData = json.loads(result)
+                lastOrder[coin] = resData['orderId']
             if  position.lower() == "short":
                 result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
                 print(result)
                 coins[coin] = position
+                resData = json.loads(result)
+                lastOrder[coin] = resData['orderId']
         except Exception as e:
             print("an exception occured - {}".format(e))
     return True
