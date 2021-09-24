@@ -29,7 +29,7 @@ lastOrder = {
 def close_order(coin):
     try:
         if lastOrder[coin] != "0":
-            result = request_client.cancel_order(symbol=coin, orderId=lastOrder[coin])
+            result = request_client.cancel_order(symbol=coin, orderId=str(lastOrder[coin]))
             print(result)
         return True
     except Exception as e:
