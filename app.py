@@ -1,5 +1,5 @@
 import json, config
-import time
+import re
 from flask import Flask,request,jsonify
 app = Flask(__name__)
 from binance_f import RequestClient
@@ -26,15 +26,9 @@ lastOrder = {
     "ADAUSDT":"0",
     "DOGEUSDT":"0",
 }
-lastOrderC = {
-    "ETHUSDT":"0",
-    "BTCUSDT":"0",
-    "ADAUSDT":"0",
-    "DOGEUSDT":"0",
-}
-def close_order(coin,orderid,cid):
+def close_order(coin,orderid):
     try:
-        result = request_client.cancel_order(symbol=coin,orderId=orderid,origClientOrderId=cid)
+        result = request_client.cancel_order(coin, orderid)
         print(f"Cansel Results: {result}")
         return True
     except Exception as e:
@@ -45,7 +39,7 @@ def order(coin,amount,leve,position):
     if coins[coin] != position :
         try:
             print(f"last Order id: {lastOrder[coin]}")
-            close_order(coin,lastOrder[coin],lastOrderC[coin])
+            #close_order(coin,lastOrder[coin])
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
@@ -60,19 +54,16 @@ def order(coin,amount,leve,position):
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
-            time.sleep(2)
             if  position.lower() == "long" :
                 result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
                 coins[coin] = position
                 lastOrder[coin] = getattr(result,'orderId')
-                lastOrderC[coin] = getattr(result,'clientOrderId')
+                
             if  position.lower() == "short":
                 result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
                 coins[coin] = position
                 lastOrder[coin] = getattr(result,'orderId')
-                lastOrderC[coin] = getattr(result,'clientOrderId')
         except Exception as e:
-           
             print("an exception occured - {}".format(e))
     return True
 @app.route('/')
@@ -84,7 +75,7 @@ def webhook():
     if resData['passkey'] != config.WEBHOOK_PASS:
         return {
             "code":"error",
-            "message":"Tricky?"
+            "message":"Invalid"
         }
     order_response = order(resData['coin'],resData['quantity'],resData['leverage'],resData['positionSide'])
     return {
