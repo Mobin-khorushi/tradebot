@@ -47,12 +47,12 @@ def order(coin,amount,leve,position):
         try:
             lavs[coin] = leve
             result = request_client.change_initial_leverage(coin, lavs[coin])
-            print(result)
+
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
             result = request_client.change_margin_type(coin, marginType=FuturesMarginType.ISOLATED)
-            print(result)
+
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
@@ -78,9 +78,6 @@ def main_view():
 def webhook():
     resData = json.loads(request.data)
     print(resData)
-    if resData['positionSide'].lower() == 'close':
-        order_response = close_order(resData['coin'])
-        print(order_response)
     order_response = order(resData['coin'],resData['quantity'],resData['leverage'],resData['positionSide'])
     print(order_response)
     if resData['passkey'] != config.WEBHOOK_PASS:
