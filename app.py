@@ -43,7 +43,9 @@ def order(coin,amount,leve,position):
         result = request_client.get_balance()
         print(result)
         try:
-            close_order(coin)
+            orderList = request_client.get_open_orders(coin)
+            print(orderList)
+            #close_order(coin)
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
