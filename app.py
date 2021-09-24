@@ -57,16 +57,16 @@ def order(coin,amount,leve,position):
             print("an exception occured - {}".format(e))
         try:
             if  position.lower() == "long":
-                result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.STOP_MARKET, quantity=amount,closePosition='true')
+                result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.STOP_MARKET, quantity=amount,closePosition='true',stopPrice="9999999999")
                 print(result)
                 coins[coin] = position
-                lastOrder[coin] = getattr(result,'orderId')
+                #lastOrder[coin] = getattr(result,'orderId')
 
             if  position.lower() == "short":
-                result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
+                result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount,closePosition='true',stopPrice="9999999999")
                 print(result)
                 coins[coin] = position
-                lastOrder[coin] = getattr(result,'orderId')
+#
         except Exception as e:
             print("an exception occured - {}".format(e))
     return True
