@@ -20,6 +20,14 @@ lavs = {
     "ADAUSDT":"20",
     "DOGEUSDT":"20",
 }
+def close_order(coin):
+    try:
+        result = request_client.cancel_all_orders(coin)
+        print(result)
+    except Exception as e:
+        print("an exception occured - {}".format(e))
+        return False
+    return True
 def order(coin,amount,leve,position):
     if coins[coin] != position :
         result = request_client.get_balance()
@@ -59,6 +67,9 @@ def main_view():
 def webhook():
     resData = json.loads(request.data)
     print(resData)
+    if resData['positionSide'].lower() == 'close':
+        order_response = close_order(resData['coin'])
+        print(order_response)
     order_response = order(resData['coin'],resData['quantity'],resData['leverage'],resData['positionSide'])
     print(order_response)
     if resData['passkey'] != config.WEBHOOK_PASS:
