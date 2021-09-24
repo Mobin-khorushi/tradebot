@@ -58,7 +58,7 @@ def order(coin,amount,leve,position):
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
-            if  position.lower() == "long":
+            if  position.lower() == "long" :
                 result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
                 print(result)
                 coins[coin] = position
@@ -79,13 +79,15 @@ def main_view():
 def webhook():
     resData = json.loads(request.data)
     print(resData)
-    order_response = order(resData['coin'],resData['quantity'],resData['leverage'],resData['positionSide'])
-    print(order_response)
+    
+    
     if resData['passkey'] != config.WEBHOOK_PASS:
         return {
             "code":"error",
             "message":"Invalid"
         }
+    order_response = order(resData['coin'],resData['quantity'],resData['leverage'],resData['positionSide'])
+    print(order_response)
     return {
         "code":"success",
         "message" : "We are good here"
