@@ -25,11 +25,6 @@ def order(coin,amount,leve,position):
         result = request_client.get_balance()
         print(result)
         try:
-            result = request_client.change_margin_type(coin, marginType=FuturesMarginType.ISOLATED)
-            print(result)
-        except Exception as e:
-            print("an exception occured - {}".format(e))
-        try:
             result = request_client.cancel_all_orders(coin)
             print(result)
         except Exception as e:
@@ -41,11 +36,16 @@ def order(coin,amount,leve,position):
         except Exception as e:
             print("an exception occured - {}".format(e))
         try:
-            if coins[coin].lower() == "long" or position.lower() == "long":
+            result = request_client.change_margin_type(coin, marginType=FuturesMarginType.ISOLATED)
+            print(result)
+        except Exception as e:
+            print("an exception occured - {}".format(e))
+        try:
+            if  position.lower() == "long":
                 result = request_client.post_order(symbol=coin, side=OrderSide.BUY, ordertype=OrderType.MARKET, quantity=amount)
                 print(result)
                 coins[coin] = position
-            if coins[coin].lower() == "short" or position.lower() == "short":
+            if  position.lower() == "short":
                 result = request_client.post_order(symbol=coin, side=OrderSide.SELL, ordertype=OrderType.MARKET, quantity=amount)
                 print(result)
                 coins[coin] = position
